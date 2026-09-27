@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Design system: tokens → element defaults → reusable primitives. */
+@import "../styles/tokens.css";
+@import "../styles/base.css";
+@import "../styles/components.css";

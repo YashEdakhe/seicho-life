@@ -1,0 +1,365 @@
+/*
+ * Reusable primitives as Tailwind v4 custom utilities.
+ * @utility (unlike @layer components) makes them work with variants such as
+ * md:section-sm or hover:link-underline, and they sort correctly against
+ * regular utilities, so `btn btn-primary w-full` behaves predictably.
+ */
+
+/* ---------- Layout ---------- */
+
+/* Centered page column with responsive side gutters. */
+@utility page-container {
+  width: 100%;
+  max-width: var(--container-content);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+@utility page-container-narrow {
+  width: 100%;
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+@utility page-container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Vertical rhythm between page sections. */
+@utility section {
+  padding-block: var(--spacing-section);
+}
+@utility section-sm {
+  padding-block: var(--spacing-section-sm);
+}
+
+/* Product listing grid: 2 columns on phones, 3 on tablets, 4 on desktop. */
+@utility grid-products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: calc(var(--spacing) * 3);
+  row-gap: calc(var(--spacing) * 8);
+
+  @media (min-width: 48rem) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: calc(var(--spacing) * 5);
+    row-gap: calc(var(--spacing) * 12);
+  }
+  @media (min-width: 80rem) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Category / collection tiles: 2 → 3 → 6 across. */
+@utility grid-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--spacing) * 3);
+
+  @media (min-width: 48rem) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: calc(var(--spacing) * 4);
+  }
+  @media (min-width: 80rem) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* Horizontally scrolling rail with snap; used for carousels on small screens. */
+@utility scroll-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 72%;
+  gap: calc(var(--spacing) * 3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  & > * {
+    scroll-snap-align: start;
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    grid-auto-columns: calc((100% - 2 * calc(var(--spacing) * 4)) / 3);
+    gap: calc(var(--spacing) * 4);
+  }
+  @media (min-width: 80rem) {
+    grid-auto-columns: calc((100% - 3 * calc(var(--spacing) * 4)) / 4);
+  }
+}
+
+/* ---------- Typography ---------- */
+
+/* Small uppercase, widely tracked label: nav items, eyebrows, filters, footer headings. */
+@utility text-label {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+@utility heading-display {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  font-weight: 400;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+}
+
+/* Secondary information: SKU, reviews count, helper text. */
+@utility text-meta {
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  color: var(--color-muted);
+}
+
+@utility prose-body {
+  max-width: var(--container-prose);
+  font-size: var(--text-base);
+  line-height: 1.75;
+  & > * + * {
+    margin-top: 1em;
+  }
+}
+
+/* ---------- Links ---------- */
+
+/* Inline text link with an underline that tightens on hover. */
+@utility link {
+  color: var(--color-ink);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: var(--color-line-strong);
+  transition: text-decoration-color var(--duration-fast) var(--ease-out);
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Navigation / footer link: no underline until hover, drawn from the left. */
+@utility link-reveal {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  padding-bottom: 2px;
+  transition: background-size var(--duration-base) var(--ease-out);
+  &:hover,
+  &[aria-current="page"] {
+    background-size: 100% 1px;
+  }
+}
+
+/* ---------- Buttons ---------- */
+/* Rectangular, uppercase, tracked; min 44px tap target. Combine `btn` with a variant. */
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--spacing) * 2);
+  min-height: 2.75rem;
+  padding-inline: calc(var(--spacing) * 6);
+  border: 1px solid transparent;
+  border-radius: var(--radius-none);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+  &:disabled,
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.45;
+    pointer-events: none;
+  }
+}
+
+@utility btn-sm {
+  min-height: 2.25rem;
+  padding-inline: calc(var(--spacing) * 4);
+  font-size: var(--text-2xs);
+}
+@utility btn-lg {
+  min-height: 3.25rem;
+  padding-inline: calc(var(--spacing) * 10);
+}
+@utility btn-icon {
+  min-height: 2.75rem;
+  width: 2.75rem;
+  padding: 0;
+}
+
+/* Filled: the single main action on a view (add to bag, checkout). */
+@utility btn-primary {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  border-color: var(--color-ink);
+  &:hover {
+    background-color: var(--color-ink-soft);
+    border-color: var(--color-ink-soft);
+  }
+}
+
+/* Outline: secondary actions (view all, wishlist, continue shopping). */
+@utility btn-secondary {
+  background-color: transparent;
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+  &:hover {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+}
+
+/* For use over imagery / dark backgrounds. */
+@utility btn-inverse {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  border-color: var(--color-paper);
+  &:hover {
+    background-color: transparent;
+    color: var(--color-paper);
+  }
+}
+
+/* Outline over imagery / dark backgrounds. */
+@utility btn-outline-inverse {
+  background-color: transparent;
+  color: var(--color-paper);
+  border-color: var(--color-paper);
+  &:hover {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+
+/* Quiet: toolbar actions, filters, icon buttons. */
+@utility btn-ghost {
+  background-color: transparent;
+  color: var(--color-ink);
+  &:hover {
+    background-color: var(--color-canvas);
+  }
+}
+
+/* ---------- Forms ---------- */
+
+@utility field {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  padding-inline: calc(var(--spacing) * 3.5);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-base);
+  transition: border-color var(--duration-fast) var(--ease-out);
+  &::placeholder {
+    color: var(--color-subtle);
+  }
+  &:hover {
+    border-color: var(--color-muted);
+  }
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-ink);
+    box-shadow: 0 0 0 1px var(--color-ink);
+  }
+  &[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+}
+
+/* ---------- Commerce ---------- */
+
+@utility badge {
+  display: inline-flex;
+  align-items: center;
+  height: 1.375rem;
+  padding-inline: calc(var(--spacing) * 2);
+  border-radius: var(--radius-xs);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+@utility badge-sale {
+  background-color: var(--color-sale);
+  color: var(--color-white);
+}
+@utility badge-dark {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
+@utility badge-accent {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+@utility price {
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+@utility price-compare {
+  color: var(--color-subtle);
+  font-size: var(--text-sm);
+  text-decoration-line: line-through;
+  font-variant-numeric: tabular-nums;
+}
+@utility price-sale {
+  color: var(--color-sale);
+}
+
+/* Product image frame: fixed 3:4 ratio, warm placeholder, gentle zoom on hover. */
+@utility media-product {
+  position: relative;
+  aspect-ratio: var(--aspect-product);
+  overflow: hidden;
+  background-color: var(--color-sand);
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+  &:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* ---------- Misc ---------- */
+
+@utility divider {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

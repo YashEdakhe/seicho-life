@@ -1,0 +1,113 @@
+/*
+ * Design tokens.
+ * Everything declared in @theme becomes both a CSS variable and a Tailwind
+ * utility (e.g. --color-ink → bg-ink / text-ink / border-ink).
+ */
+
+@theme {
+  /* Reset Tailwind's default palette so only brand tokens are available. */
+  --color-*: initial;
+
+  /* ---------- Colour ---------- */
+  /* Neutral, mostly monochrome palette: product imagery provides the colour. */
+  --color-ink: #141414; /* primary text, filled buttons */
+  --color-ink-soft: #3a3a3a; /* body copy */
+  --color-muted: #6b6b6b; /* secondary text, meta, placeholders */
+  --color-subtle: #9a9a9a; /* disabled, strike-through prices */
+  --color-line: #e4e1dc; /* hairline borders, dividers */
+  --color-line-strong: #c9c5be; /* input borders, hover borders */
+  --color-paper: #ffffff; /* page background */
+  --color-canvas: #f6f4f0; /* warm off-white section / card background */
+  --color-sand: #ece8e1; /* image placeholders, hover fills */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Brand accent: a muted moss green ("seicho" = growth). Use sparingly. */
+  --color-accent: #4b5e40;
+  --color-accent-soft: #e6ebe1;
+
+  /* Feedback */
+  --color-sale: #a8322d; /* discount price / sale badge */
+  --color-success: #2f6b3a;
+  --color-warning: #9a6a12;
+  --color-danger: #b42318;
+  --color-focus: #141414;
+
+  /* ---------- Typography ---------- */
+  /* Geometric display face for headings and labels, humanist sans for reading. */
+  --font-display: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Small, restrained scale; storefront copy is mostly 12–15px. */
+  --text-2xs: 0.6875rem; /* 11px – badges, legal */
+  --text-2xs--line-height: 1rem;
+  --text-xs: 0.75rem; /* 12px – labels, nav, meta */
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem; /* 14px – secondary body, product titles */
+  --text-sm--line-height: 1.375rem;
+  --text-base: 0.9375rem; /* 15px – body */
+  --text-base--line-height: 1.6;
+  --text-lg: 1.125rem; /* 18px */
+  --text-lg--line-height: 1.6;
+  /* Headings scale fluidly between mobile and desktop. */
+  --text-h4: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-h4--line-height: 1.35;
+  --text-h3: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --text-h3--line-height: 1.3;
+  --text-h2: clamp(1.375rem, 1.15rem + 1vw, 2rem);
+  --text-h2--line-height: 1.2;
+  --text-h1: clamp(1.75rem, 1.35rem + 1.8vw, 3rem);
+  --text-h1--line-height: 1.1;
+  --text-display: clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem);
+  --text-display--line-height: 1.02;
+
+  /* Wide tracking for uppercase labels, slight tightening for large headings. */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.06em;
+  --tracking-label: 0.12em;
+  --tracking-widest: 0.2em;
+
+  /* ---------- Spacing / layout ---------- */
+  /* Tailwind's 4px spacing base is kept; these are named layout rhythms. */
+  --spacing: 0.25rem;
+  --spacing-gutter: clamp(1rem, 0.6rem + 1.8vw, 2.5rem); /* page side padding */
+  --spacing-section: clamp(3rem, 2rem + 4vw, 6rem); /* between page sections */
+  --spacing-section-sm: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  --spacing-header: 3.5rem; /* mobile header height */
+  --spacing-header-lg: 4.5rem;
+
+  --container-prose: 42rem;
+  --container-narrow: 64rem; /* checkout, account, article */
+  --container-content: 80rem; /* default page width */
+  --container-wide: 100rem; /* product grids, full-bleed sections */
+
+  /* Breakpoints (Tailwind defaults plus an extra-small step). */
+  --breakpoint-xs: 30rem;
+
+  /* ---------- Shape ---------- */
+  /* Squared, editorial look: square corners by default, tiny rounding only on inputs/badges. */
+  --radius-none: 0;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgb(20 20 20 / 0.06);
+  --shadow-md: 0 8px 24px -12px rgb(20 20 20 / 0.18);
+  --shadow-lg: 0 24px 48px -24px rgb(20 20 20 / 0.28);
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 600ms;
+
+  /* ---------- Media ---------- */
+  --aspect-product: 3 / 4; /* product card / gallery images */
+  --aspect-square: 1 / 1;
+  --aspect-hero: 16 / 7; /* desktop hero banner */
+  --aspect-hero-mobile: 4 / 5; /* mobile hero banner */
+  --aspect-tile: 4 / 5; /* category tiles */
+}

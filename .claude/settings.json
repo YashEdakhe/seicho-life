@@ -1,0 +1,20 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(pnpm build)",
+            "Bash(pnpm test *)",
+            "Bash(pnpm typecheck)",
+            "Bash(pnpm status)",
+            "Bash(pnpm diff *)"
+        ],
+        "ask": [
+            "Bash(git push *)"
+        ],
+        "deny": [
+            "Read(**/.env)",
+            "Read(**/.env.*)",
+            "Edit(**/.env)",
+            "Edit(**/.env.*)"
+        ]
+    }
+}
