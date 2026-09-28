@@ -91,7 +91,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
             <p className="text-ink-soft">{product.description}</p>
 
-            <ProductPurchase colors={product.colors} sizes={product.sizes} />
+            <ProductPurchase productId={product.id} colors={product.colors} sizes={product.sizes} />
 
             <div>
               <ul className="grid gap-3 border-t border-line py-5 text-sm">

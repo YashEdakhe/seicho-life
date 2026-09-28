@@ -1,21 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId, useState, useTransition } from "react";
+import { addToCart } from "@/app/cart/actions";
+import { setCartCount } from "@/components/cart/cart-count";
 import { Button } from "@/components/ui/button";
 import { LOW_STOCK_THRESHOLD, type ColorOption, type SizeOption } from "@/lib/catalog-types";
 import { cn } from "@/lib/cn";
 
 type ProductPurchaseProps = {
+  productId: number;
   colors: ColorOption[];
   sizes: SizeOption[];
 };
 
 /**
- * Colour + size selection and the add-to-bag action.
- * There is no cart yet: adding only shows a confirmation.
+ * Colour + size selection and the add-to-bag action. The server re-checks stock on add,
+ * since `sizes` may be up to 5 minutes old. Colour is display-only and isn't sent.
  */
-export function ProductPurchase({ colors, sizes }: ProductPurchaseProps) {
+export function ProductPurchase({ productId, colors, sizes }: ProductPurchaseProps) {
   const id = useId();
   const singleSize = sizes.length === 1;
   const soldOut = sizes.every((s) => s.stock === 0);
@@ -24,7 +27,9 @@ export function ProductPurchase({ colors, sizes }: ProductPurchaseProps) {
   const [size, setSize] = useState<string | null>(
     singleSize && sizes[0].stock > 0 ? sizes[0].label : null,
   );
-  const [status, setStatus] = useState<"idle" | "needs-size" | "added">("idle");
+  const [status, setStatus] = useState<"idle" | "needs-size" | "added" | "error">("idle");
+  const [message, setMessage] = useState("");
+  const [pending, startTransition] = useTransition();
 
   const selectedSize = sizes.find((s) => s.label === size);
 
@@ -33,7 +38,22 @@ export function ProductPurchase({ colors, sizes }: ProductPurchaseProps) {
       setStatus("needs-size");
       return;
     }
-    setStatus("added");
+    startTransition(async () => {
+      try {
+        const result = await addToCart(productId, size, 1);
+        if (result.ok) {
+          setCartCount(result.count);
+          setStatus("added");
+          setMessage(result.message ?? "Added to bag.");
+        } else {
+          setStatus("error");
+          setMessage(result.error);
+        }
+      } catch {
+        setStatus("error");
+        setMessage("Something went wrong. Please try again.");
+      }
+    });
   }
 
   return (
@@ -140,12 +160,20 @@ export function ProductPurchase({ colors, sizes }: ProductPurchaseProps) {
             </p>
           </>
         ) : (
-          <Button size="lg" fullWidth onClick={addToBag}>
-            {size ? "Add to bag" : "Select a size"}
+          <Button size="lg" fullWidth onClick={addToBag} disabled={pending} aria-busy={pending}>
+            {pending ? "Adding…" : size ? "Add to bag" : "Select a size"}
           </Button>
         )}
-        <p role="status" className="min-h-5 text-sm text-success">
-          {status === "added" && `Added to bag: ${color ? `${color}, ` : ""}${size}.`}
+        <p role="status" className={cn("min-h-5 text-sm", status === "error" ? "text-danger" : "text-success")}>
+          {status === "added" && (
+            <>
+              {message}{" "}
+              <Link href="/cart" className="link text-ink">
+                View bag
+              </Link>
+            </>
+          )}
+          {status === "error" && message}
         </p>
       </div>
     </div>

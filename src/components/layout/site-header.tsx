@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BagIcon, SearchIcon, UserIcon } from "@/components/icons";
+import { CartCount } from "@/components/cart/cart-count";
+import { SearchIcon, UserIcon } from "@/components/icons";
 import { navigation } from "@/data/catalog";
 import { MobileNav } from "./mobile-nav";
 
@@ -42,12 +43,7 @@ export function SiteHeader() {
           <Link href="/account" className={`${iconLink} hidden sm:inline-flex`} aria-label="Account">
             <UserIcon />
           </Link>
-          <Link href="/cart" className={`${iconLink} relative`} aria-label="Shopping bag, 0 items">
-            <BagIcon />
-            <span className="absolute top-1.5 right-1.5 grid size-4 place-items-center rounded-full bg-ink text-[0.625rem] leading-none text-paper">
-              0
-            </span>
-          </Link>
+          <CartCount className={`${iconLink} relative`} />
         </div>
       </div>
     </header>
