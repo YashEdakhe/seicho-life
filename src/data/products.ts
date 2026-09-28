@@ -70,6 +70,15 @@ export async function getNewArrivals(limit = 8) {
   return (await findProducts(eq(products.isNewArrival, true), { limit })).map(toProduct);
 }
 
+/** All new arrivals, newest first, for the New In page. */
+export async function getLatestArrivals(limit = 48) {
+  const rows = await findProducts(eq(products.isNewArrival, true), {
+    orderBy: [desc(products.createdAt), desc(products.id)],
+    limit,
+  });
+  return rows.map(toProduct);
+}
+
 export async function getBestSellers(limit = 6) {
   return (await findProducts(eq(products.isBestseller, true), { limit })).map(toProduct);
 }
@@ -83,6 +92,30 @@ export async function getRelatedProducts(product: Product, limit = 4) {
     ],
     limit,
   });
+  return rows.map(toProduct);
+}
+
+export async function getCategorySlugs() {
+  const rows = await db.select({ slug: categories.slug }).from(categories);
+  return rows.map((row) => row.slug);
+}
+
+/** Cached per request so generateMetadata and the page share one query. */
+export const getCategory = cache(async (slug: string) => {
+  const [row] = await db
+    .select({ slug: categories.slug, name: categories.name })
+    .from(categories)
+    .where(eq(categories.slug, slug))
+    .limit(1);
+  return row;
+});
+
+/** Every active product in a category, in catalogue order. */
+export async function getCategoryProducts(slug: string, limit = 48) {
+  const rows = await findProducts(
+    sql`${products.categoryId} = (select id from ${categories} where slug = ${slug})`,
+    { limit },
+  );
   return rows.map(toProduct);
 }
 
