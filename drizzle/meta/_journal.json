@@ -15,6 +15,13 @@
       "when": 1790580756849,
       "tag": "0001_gigantic_hex",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790599063610,
+      "tag": "0002_magical_wolfpack",
+      "breakpoints": true
     }
   ]
 }
