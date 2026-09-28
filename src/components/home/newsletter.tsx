@@ -24,6 +24,8 @@ export function Newsletter() {
           </p>
         ) : (
           <form
+            // POST so a submit before hydration never puts the email in the URL (CWE-598).
+            method="post"
             className="flex w-full max-w-md flex-col gap-3 sm:flex-row"
             onSubmit={(e) => {
               e.preventDefault();
